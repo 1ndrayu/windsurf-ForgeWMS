@@ -12,7 +12,7 @@ const Storage: React.FC = () => {
 
   const load = () => {
     setLoading(true);
-    fetch('/api/storage-bins')
+    fetch('/api/storage-bins', { cache: 'no-store' })
       .then(r => r.json())
       .then(setBins)
       .catch(console.error)
@@ -21,6 +21,12 @@ const Storage: React.FC = () => {
 
   React.useEffect(() => {
     load();
+  }, []);
+
+  // Poll for near-live updates
+  React.useEffect(() => {
+    const id = setInterval(load, 5000);
+    return () => clearInterval(id);
   }, []);
 
   const startEdit = (b: Bin) => {

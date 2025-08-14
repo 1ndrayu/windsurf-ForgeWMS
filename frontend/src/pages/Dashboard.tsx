@@ -34,9 +34,9 @@ const Dashboard: React.FC = () => {
     try {
       setLoading(true);
       const [g, b, a] = await Promise.all([
-        fetch('/api/goods').then(r => r.json()),
-        fetch('/api/storage-bins').then(r => r.json()),
-        fetch('/api/audit?limit=10').then(r => r.json()),
+        fetch('/api/goods', { cache: 'no-store' }).then(r => r.json()),
+        fetch('/api/storage-bins', { cache: 'no-store' }).then(r => r.json()),
+        fetch('/api/audit?limit=10', { cache: 'no-store' }).then(r => r.json()),
       ]);
       setGoods(g);
       setBins(b);
@@ -50,6 +50,12 @@ const Dashboard: React.FC = () => {
 
   React.useEffect(() => {
     load();
+  }, []);
+
+  // Poll for near-live updates
+  React.useEffect(() => {
+    const id = setInterval(load, 5000);
+    return () => clearInterval(id);
   }, []);
 
   const lowStock = goods.filter(g => (Number(g.stock) || 0) < 10).length;

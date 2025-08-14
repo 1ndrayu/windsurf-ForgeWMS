@@ -17,7 +17,7 @@ const Goods: React.FC = () => {
 
   const loadGoods = () => {
     setLoading(true);
-    fetch('/api/goods')
+    fetch('/api/goods', { cache: 'no-store' })
       .then(r => r.json())
       .then(setItems)
       .catch(console.error)
@@ -26,6 +26,12 @@ const Goods: React.FC = () => {
 
   React.useEffect(() => {
     loadGoods();
+  }, []);
+
+  // Poll for near-live updates
+  React.useEffect(() => {
+    const id = setInterval(loadGoods, 5000);
+    return () => clearInterval(id);
   }, []);
 
   const handleCreate = async () => {
