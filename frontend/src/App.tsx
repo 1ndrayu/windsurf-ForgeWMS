@@ -39,6 +39,28 @@ function AppShell() {
               ))}
             </nav>
           </div>
+          {/* Mobile nav */}
+          <div className="mx-auto max-w-7xl px-4 pb-3 md:hidden">
+            <nav className="flex items-center gap-4 overflow-x-auto text-sm no-scrollbar">
+              {[
+                { to: '/', label: 'Dashboard' },
+                { to: '/goods', label: 'Goods' },
+                { to: '/storage', label: 'Storage' },
+                { to: '/shares', label: 'Access' },
+              ].map(link => (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  end={link.to === '/'}
+                  className={({ isActive }) =>
+                    `shrink-0 rounded-md px-3 py-1.5 border border-white/10 ${isActive ? 'bg-white/10 text-white' : 'text-white/70'} `
+                  }
+                >
+                  {link.label}
+                </NavLink>
+              ))}
+            </nav>
+          </div>
         </header>
       )}
       {shareMode && (

@@ -184,7 +184,8 @@ const Goods: React.FC = () => {
       )}
 
       <div className="rounded-xl overflow-hidden border border-white/5">
-        <div className="grid grid-cols-5 bg-white/5 text-xs uppercase tracking-wide text-white/70">
+        {/* Header row hidden on mobile */}
+        <div className="hidden md:grid md:grid-cols-5 bg-white/5 text-xs uppercase tracking-wide text-white/70">
           <div className="px-3 py-2">SKU</div>
           <div className="px-3 py-2">Name</div>
           <div className="px-3 py-2">Stock</div>
@@ -197,18 +198,30 @@ const Goods: React.FC = () => {
         {!loading && items.map((g, i) => (
           <motion.div
             key={g.id}
-            className="grid grid-cols-5 items-center bg-[var(--color-elev)]/60 hover:bg-[var(--color-elev)] transition border-t border-white/5"
+            className="grid grid-cols-1 md:grid-cols-5 items-start md:items-center bg-[var(--color-elev)]/60 hover:bg-[var(--color-elev)] transition border-t border-white/5"
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.2, delay: i * 0.03 }}
           >
-            <div className="px-3 py-3 text-sm font-mono">{g.id}</div>
-            <div className="px-3 py-3 text-sm">{g.name}</div>
-            <div className="px-3 py-3 text-sm">{g.stock}</div>
-            <div className="px-3 py-3 text-sm">{g.location}</div>
-            <div className="px-3 py-3 text-sm text-right">
+            <div className="px-3 py-3 text-sm">
+              <div className="md:hidden text-[10px] uppercase tracking-wide text-white/50 mb-1">SKU</div>
+              <div className="font-mono break-all">{g.id}</div>
+            </div>
+            <div className="px-3 py-3 text-sm">
+              <div className="md:hidden text-[10px] uppercase tracking-wide text-white/50 mb-1">Name</div>
+              <div>{g.name}</div>
+            </div>
+            <div className="px-3 py-3 text-sm">
+              <div className="md:hidden text-[10px] uppercase tracking-wide text-white/50 mb-1">Stock</div>
+              <div>{g.stock}</div>
+            </div>
+            <div className="px-3 py-3 text-sm">
+              <div className="md:hidden text-[10px] uppercase tracking-wide text-white/50 mb-1">Location</div>
+              <div>{g.location}</div>
+            </div>
+            <div className="px-3 py-3 text-sm text-left md:text-right">
               {!readOnly && (
-                <button className="text-[var(--color-accent)] hover:underline" onClick={() => openEdit(g)}>Edit</button>
+                <button className="inline-flex rounded-md border border-white/10 px-2.5 py-1.5 text-xs text-[var(--color-accent)] hover:bg-white/5" onClick={() => openEdit(g)}>Edit</button>
               )}
             </div>
           </motion.div>
