@@ -30,9 +30,9 @@ const Dashboard: React.FC = () => {
   const [audit, setAudit] = React.useState<Audit[]>([]);
   const [loading, setLoading] = React.useState(true);
 
-  const load = async () => {
+  const load = async (silent: boolean = false) => {
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
       const [g, b, a] = await Promise.all([
         fetch('/api/goods', { cache: 'no-store' }).then(r => r.json()),
         fetch('/api/storage-bins', { cache: 'no-store' }).then(r => r.json()),
@@ -44,7 +44,7 @@ const Dashboard: React.FC = () => {
     } catch (e) {
       console.error(e);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -52,10 +52,26 @@ const Dashboard: React.FC = () => {
     load();
   }, []);
 
-  // Poll for near-live updates
+  // Event-driven polling: check newest audit only, refresh silently when it changes
   React.useEffect(() => {
-    const id = setInterval(load, 5000);
-    return () => clearInterval(id);
+    let lastTsRef: string | null = null;
+    let stop = false;
+    const tick = async () => {
+      try {
+        const latest = await fetch('/api/audit?limit=1', { cache: 'no-store' }).then(r => r.json());
+        const newestTs: string | undefined = latest?.[0]?.ts;
+        if (newestTs && lastTsRef && newestTs !== lastTsRef) {
+          await load(true);
+        }
+        if (newestTs) lastTsRef = newestTs;
+      } catch (e) {
+        console.error(e);
+      } finally {
+        if (!stop) setTimeout(tick, 5000);
+      }
+    };
+    tick();
+    return () => { stop = true; };
   }, []);
 
   const lowStock = goods.filter(g => (Number(g.stock) || 0) < 10).length;

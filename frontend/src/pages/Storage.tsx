@@ -10,23 +10,42 @@ const Storage: React.FC = () => {
   const [editing, setEditing] = React.useState<string | null>(null);
   const [newCap, setNewCap] = React.useState<string>('');
 
-  const load = () => {
-    setLoading(true);
+  const load = (silent: boolean = false) => {
+    if (!silent) setLoading(true);
     fetch('/api/storage-bins', { cache: 'no-store' })
       .then(r => r.json())
       .then(setBins)
       .catch(console.error)
-      .finally(() => setLoading(false));
+      .finally(() => { if (!silent) setLoading(false); });
   };
 
   React.useEffect(() => {
     load();
   }, []);
 
-  // Poll for near-live updates
+  // Event-driven polling: refresh when newest audit changes
   React.useEffect(() => {
-    const id = setInterval(load, 5000);
-    return () => clearInterval(id);
+    let lastTs: string | null = null;
+    let stop = false;
+    const tick = async () => {
+      try {
+        if (typeof document !== 'undefined' && document.hidden) {
+          if (!stop) return void setTimeout(tick, 5000);
+        }
+        const latest = await fetch('/api/audit?limit=1', { cache: 'no-store' }).then(r => r.json());
+        const ts: string | undefined = latest?.[0]?.ts;
+        if (ts && lastTs && ts !== lastTs) {
+          load(true);
+        }
+        if (ts) lastTs = ts;
+      } catch (e) {
+        console.error(e);
+      } finally {
+        if (!stop) setTimeout(tick, 5000);
+      }
+    };
+    tick();
+    return () => { stop = true; };
   }, []);
 
   const startEdit = (b: Bin) => {

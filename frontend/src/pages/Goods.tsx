@@ -15,23 +15,43 @@ const Goods: React.FC = () => {
   const [location, setLocation] = React.useState('');
   const [editingId, setEditingId] = React.useState<string | null>(null);
 
-  const loadGoods = () => {
-    setLoading(true);
+  const loadGoods = (silent: boolean = false) => {
+    if (!silent) setLoading(true);
     fetch('/api/goods', { cache: 'no-store' })
       .then(r => r.json())
       .then(setItems)
       .catch(console.error)
-      .finally(() => setLoading(false));
+      .finally(() => { if (!silent) setLoading(false); });
   };
 
   React.useEffect(() => {
     loadGoods();
   }, []);
 
-  // Poll for near-live updates
+  // Event-driven polling: refresh only when newest audit changes
   React.useEffect(() => {
-    const id = setInterval(loadGoods, 5000);
-    return () => clearInterval(id);
+    let lastTs: string | null = null;
+    let stop = false;
+    const tick = async () => {
+      try {
+        if (typeof document !== 'undefined' && document.hidden) {
+          // Skip while tab not visible
+          if (!stop) return void setTimeout(tick, 5000);
+        }
+        const latest = await fetch('/api/audit?limit=1', { cache: 'no-store' }).then(r => r.json());
+        const ts: string | undefined = latest?.[0]?.ts;
+        if (ts && lastTs && ts !== lastTs) {
+          loadGoods(true);
+        }
+        if (ts) lastTs = ts;
+      } catch (e) {
+        console.error(e);
+      } finally {
+        if (!stop) setTimeout(tick, 5000);
+      }
+    };
+    tick();
+    return () => { stop = true; };
   }, []);
 
   const handleCreate = async () => {
