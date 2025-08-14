@@ -18,3 +18,17 @@ build/
 .DS_Store
 .vscode/
 .idea/
+
+# Logs and analytics artifacts
+logs/
+*.ndjson
+analytics/models/
+analytics/feats.parquet
+*.joblib
+*.parquet
+
+# Stray root files (keep analytics/ versions only)
+/parse_and_featurize.py
+/train_models.py
+/requirements.txt
+/sample_logs.ndjson

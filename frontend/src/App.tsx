@@ -1,4 +1,6 @@
 import React from 'react';
+import { GlobalSearch } from './components/GlobalSearch';
+import { useAlerts, AlertEvent } from './hooks/useAlerts';
 import { BrowserRouter as Router, Routes, Route, NavLink, useLocation, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Dashboard from './pages/Dashboard';
@@ -17,27 +19,30 @@ function AppShell() {
           <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="h-8 w-8 rounded-sm bg-[var(--color-accent)]" />
-              <h1 className="text-lg font-semibold tracking-tight">Forge WMS</h1>
+              <span className="font-semibold">Forge WMS</span>
             </div>
-            <nav className="hidden md:flex items-center gap-6 text-sm">
-              {[
-                { to: '/', label: 'Dashboard' },
-                { to: '/goods', label: 'Goods' },
-                { to: '/storage', label: 'Storage' },
-                { to: '/shares', label: 'Access Windows' },
-              ].map(link => (
-                <NavLink
-                  key={link.to}
-                  to={link.to}
-                  end={link.to === '/'}
-                  className={({ isActive }) =>
-                    `relative transition-colors hover:text-white ${isActive ? 'text-white' : 'text-white/70'} after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:bg-[var(--color-accent)] after:transition-all ${isActive ? 'after:w-full' : 'after:w-0 hover:after:w-full'}`
-                  }
-                >
-                  {link.label}
-                </NavLink>
-              ))}
-            </nav>
+            <div className="hidden md:flex items-center gap-6">
+              <GlobalSearch />
+              <nav className="flex items-center gap-6 text-sm">
+                {[
+                  { to: '/', label: 'Dashboard' },
+                  { to: '/goods', label: 'Goods' },
+                  { to: '/storage', label: 'Storage' },
+                  { to: '/shares', label: 'Access Windows' },
+                ].map(link => (
+                  <NavLink
+                    key={link.to}
+                    to={link.to}
+                    end={link.to === '/'}
+                    className={({ isActive }) =>
+                      `relative transition-colors hover:text-white ${isActive ? 'text-white' : 'text-white/70'} after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:bg-[var(--color-accent)] after:transition-all ${isActive ? 'after:w-full' : 'after:w-0 hover:after:w-full'}`
+                    }
+                  >
+                    {link.label}
+                  </NavLink>
+                ))}
+              </nav>
+            </div>
           </div>
           {/* Mobile nav */}
           <div className="mx-auto max-w-7xl px-4 pb-3 md:hidden">
@@ -80,6 +85,9 @@ function AppShell() {
         </header>
       )}
 
+      {/* In-app alerts banner */}
+      {!shareMode && <AlertBanner />}
+
       <main className="mx-auto max-w-7xl px-4 py-8">
         <motion.div
           initial={{ opacity: 0, y: 8 }}
@@ -107,6 +115,40 @@ function AppShell() {
     </div>
   );
 }
+
+const AlertBanner: React.FC = () => {
+  const [msg, setMsg] = React.useState<string | null>(null);
+  const timerRef = React.useRef<number | null>(null);
+  const format = (ev: AlertEvent): string | null => {
+    if (ev.kind === 'AUDIT' && ev.entry) {
+      const e: any = ev.entry;
+      if (e.type === 'goods' && e.action === 'create') return `Added ${e.after?.id}`;
+      if (e.type === 'goods' && e.action === 'update') return `Updated ${e.after?.id || e.before?.id}`;
+      if (e.type === 'goods' && e.action === 'delete') return `Deleted ${e.before?.id}`;
+      if (e.type === 'storage' && e.action === 'capacity') return `Bin ${e.after?.id} capacity ${e.after?.capacity}`;
+      if (e.type === 'share') return `Share ${e.action}`;
+      return `${e.type} ${e.action}`;
+    }
+    return null;
+  };
+  useAlerts((ev) => {
+    const m = format(ev);
+    if (!m) return;
+    setMsg(m);
+    if (timerRef.current) window.clearTimeout(timerRef.current);
+    timerRef.current = window.setTimeout(() => setMsg(null), 4000);
+  });
+  if (!msg) return null;
+  return (
+    <div className="sticky top-12 z-10">
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="mt-2 rounded-md bg-[var(--color-elev)] border border-white/10 px-3 py-2 text-sm text-white/90 soft-shadow">
+          {msg}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 function App() {
   return (
