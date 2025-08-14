@@ -13,7 +13,7 @@ function AppShell() {
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-foreground)]">
       {!shareMode && (
-        <header className="sticky top-0 z-10 border-b border-white/5 bg-black/30 backdrop-blur">
+        <header className="sticky top-0 z-10 border-b border-white/5 bg-black/30 backdrop-blur soft-shadow">
           <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="h-8 w-8 rounded-sm bg-[var(--color-accent)]" />
@@ -31,7 +31,7 @@ function AppShell() {
                   to={link.to}
                   end={link.to === '/'}
                   className={({ isActive }) =>
-                    `transition-colors hover:text-white ${isActive ? 'text-white' : 'text-white/70'}`
+                    `relative transition-colors hover:text-white ${isActive ? 'text-white' : 'text-white/70'} after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:bg-[var(--color-accent)] after:transition-all ${isActive ? 'after:w-full' : 'after:w-0 hover:after:w-full'}`
                   }
                 >
                   {link.label}
