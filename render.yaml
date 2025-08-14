@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: forge-wms
+    env: docker
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 4000
+      - key: NODE_ENV
+        value: production
+      # Set to your domain in production to restrict cross-origin requests
+      - key: CORS_ORIGIN
+        value: "*"
+      - key: DATA_DIR
+        value: /data
+    disk:
+      name: data
+      mountPath: /data
+      sizeGB: 1

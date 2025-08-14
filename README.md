@@ -1,46 +1,89 @@
-# Getting Started with Create React App
+# Warehouse Management App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern, minimalist warehouse management application with real-time tracking and multi-view sharing capabilities.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Goods management system
+- Storage tracking
+- Multi-view sharing for vendors and stakeholders
+- Modern industrial design
+- Subtle web animations
+- Responsive dashboard
 
-### `npm start`
+## Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Frontend: React with TypeScript
+- UI Framework: Material-UI
+- Animations: Framer Motion
+- Backend: Node.js/Express
+- Database: MongoDB
+- Authentication: JWT
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Project Structure
 
-### `npm test`
+```
+warehouse-management-app/
+├── client/          # React frontend application
+├── server/          # Node.js backend
+└── README.md        # Project documentation
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Setup Instructions
 
-### `npm run build`
+### Backend Setup
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Navigate to the root directory:
+```bash
+cd warehouse-management-app
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Install dependencies:
+```bash
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. Create a `.env` file in the root directory with the following variables:
+```
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+```
 
-### `npm run eject`
+4. Start the backend server:
+```bash
+npm run dev
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Frontend Setup
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. Navigate to the client directory:
+```bash
+cd client
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+3. Start the development server:
+```bash
+npm start
+```
 
-## Learn More
+## Color Palette
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Primary: #2196F3 (Material Blue)
+- Secondary: #1976D2 (Material Dark Blue)
+- Background: #F5F5F5 (Material Light Gray)
+- Text: #333333 (Dark Gray)
+- Accent: #FFC107 (Material Amber)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Font Family
+
+- Primary: 'Inter', sans-serif
+- Secondary: 'Roboto', sans-serif
+
+## License
+
+MIT

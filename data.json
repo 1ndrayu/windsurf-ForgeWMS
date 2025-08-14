@@ -1,0 +1,92 @@
+{
+  "goods": [
+    {
+      "stock": 70,
+      "location": "se01",
+      "id": "a101",
+      "name": "Carboard Packaging - Crate Envelope"
+    }
+  ],
+  "shares": [
+    {
+      "id": "sh_abc1",
+      "name": "Vendor Inventory 1",
+      "scope": "SKUs A*, stock levels",
+      "url": "/share/sh_abc1",
+      "access": "public"
+    }
+  ],
+  "capacities": {
+    "se01": 240
+  },
+  "audit": [
+    {
+      "id": "aud_58zfl4zh",
+      "ts": "2025-08-14T17:08:39.437Z",
+      "type": "storage",
+      "action": "capacity",
+      "after": {
+        "id": "se01",
+        "capacity": 240
+      }
+    },
+    {
+      "id": "aud_rmvk0xc6",
+      "ts": "2025-08-14T17:08:32.315Z",
+      "type": "storage",
+      "action": "capacity",
+      "after": {
+        "id": "se01",
+        "capacity": 240
+      }
+    },
+    {
+      "id": "aud_2fwr62c9",
+      "ts": "2025-08-14T17:03:19.057Z",
+      "type": "goods",
+      "action": "create",
+      "after": {
+        "stock": 70,
+        "location": "se01",
+        "id": "a101",
+        "name": "Carboard Packaging - Crate Envelope"
+      }
+    },
+    {
+      "id": "aud_p3w7wwm6",
+      "ts": "2025-08-14T17:02:33.059Z",
+      "type": "goods",
+      "action": "delete",
+      "before": {
+        "id": "SKU-CT90",
+        "name": "Cable Tie 90",
+        "stock": 240,
+        "location": "C-11"
+      }
+    },
+    {
+      "id": "aud_kkooi7pr",
+      "ts": "2025-08-14T17:02:24.562Z",
+      "type": "goods",
+      "action": "delete",
+      "before": {
+        "id": "SKU-BX03",
+        "name": "Bolt Pack 03",
+        "stock": 64,
+        "location": "B-9"
+      }
+    },
+    {
+      "id": "aud_d41hw3u8",
+      "ts": "2025-08-14T17:02:21.996Z",
+      "type": "goods",
+      "action": "delete",
+      "before": {
+        "id": "SKU-AX12",
+        "name": "Alloy Widget 12",
+        "stock": 120,
+        "location": "A-14"
+      }
+    }
+  ]
+}
