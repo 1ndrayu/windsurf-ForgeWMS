@@ -44,6 +44,8 @@ const Dashboard: React.FC = () => {
   const [bins, setBins] = React.useState<Bin[]>([]);
   const [audit, setAudit] = React.useState<Audit[]>([]);
   const [loading, setLoading] = React.useState(true);
+  const [showBins, setShowBins] = React.useState(true);
+  const [showActivity, setShowActivity] = React.useState(true);
 
   const load = async (silent: boolean = false) => {
     try {
@@ -71,7 +73,7 @@ const Dashboard: React.FC = () => {
   React.useEffect(() => {
     let lastTsRef: string | null = null;
     let stop = false;
-    const tick = async () => {
+    const tick = async (): Promise<void> => {
       try {
         const latest = await fetch('/api/audit?limit=1', { cache: 'no-store' }).then(r => r.json());
         const newestTs: string | undefined = latest?.[0]?.ts;
@@ -147,9 +149,18 @@ const Dashboard: React.FC = () => {
         >
           <div className="flex items-center justify-between">
             <h3 className="text-[14px] uppercase tracking-wide font-semibold text-white/80">Top Utilized Bins</h3>
-            <span className="text-[12px] text-white/50">capacity usage</span>
+            <div className="flex items-center gap-3">
+              <span className="hidden lg:inline text-[12px] text-white/50">capacity usage</span>
+              <button
+                type="button"
+                className="lg:hidden text-[12px] px-2 py-1 rounded border border-white/10 hover:bg-white/5"
+                onClick={() => setShowBins(v => !v)}
+              >
+                {showBins ? 'Collapse' : 'Expand'}
+              </button>
+            </div>
           </div>
-          <div className="mt-5 space-y-4">
+          <div className={`mt-5 space-y-4 ${showBins ? 'block' : 'hidden'} lg:block`}>
             {loading && <div className="text-[13px] text-white/60">Loading…</div>}
             {!loading && topBins.length === 0 && <div className="text-[13px] text-white/60">No bins yet</div>}
             {!loading && topBins.map((b) => {
@@ -172,8 +183,17 @@ const Dashboard: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <h3 className="text-[14px] uppercase tracking-wide font-semibold text-white/80">Recent Activity</h3>
-          <ul className="mt-4 divide-y divide-white/5">
+          <div className="flex items-center justify-between">
+            <h3 className="text-[14px] uppercase tracking-wide font-semibold text-white/80">Recent Activity</h3>
+            <button
+              type="button"
+              className="lg:hidden text-[12px] px-2 py-1 rounded border border-white/10 hover:bg-white/5"
+              onClick={() => setShowActivity(v => !v)}
+            >
+              {showActivity ? 'Collapse' : 'Expand'}
+            </button>
+          </div>
+          <ul className={`mt-4 divide-y divide-white/5 ${showActivity ? 'block' : 'hidden'} lg:block`}>
             {loading && <li className="py-2 text-[13px] text-white/60">Loading…</li>}
             {!loading && audit.length === 0 && <li className="py-2 text-[13px] text-white/60">No recent events</li>}
             {!loading && audit.map(ev => (

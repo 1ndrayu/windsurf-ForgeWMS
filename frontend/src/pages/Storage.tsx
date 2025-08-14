@@ -27,10 +27,10 @@ const Storage: React.FC = () => {
   React.useEffect(() => {
     let lastTs: string | null = null;
     let stop = false;
-    const tick = async () => {
+    const tick = async (): Promise<void> => {
       try {
         if (typeof document !== 'undefined' && document.hidden) {
-          if (!stop) return void setTimeout(tick, 5000);
+          if (!stop) { setTimeout(tick, 5000); return; }
         }
         const latest = await fetch('/api/audit?limit=1', { cache: 'no-store' }).then(r => r.json());
         const ts: string | undefined = latest?.[0]?.ts;
