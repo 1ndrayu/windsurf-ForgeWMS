@@ -1,4 +1,4 @@
-# Warehouse Management App
+# ForgeWMS [Warehouse Management System] App
 
 A modern, minimalist warehouse management application with real-time tracking and multi-view sharing capabilities.
 
